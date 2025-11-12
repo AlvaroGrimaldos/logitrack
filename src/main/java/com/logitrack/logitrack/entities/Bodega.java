@@ -1,5 +1,10 @@
 package com.logitrack.logitrack.entities;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +33,8 @@ public class Bodega {
 
     @Column(nullable = false, length = 255)
     private String ubicacion;
+
+    @Column(nullable = true)
     private Integer capacidad;
 
     // Usamos un campo Long para almacenar el id del usuario encargado.
@@ -38,9 +45,17 @@ public class Bodega {
     // @JsonBackReference
     // private Usuario encargado;
     //
-    @Column(name = "encargado_id")
+    @Column(name = "encargado_id", nullable = false)
     private Long encargadoId;
 
+    @Column(nullable = false) 
     private boolean activo;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "update_at", nullable = true)
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 }
