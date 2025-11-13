@@ -3,9 +3,11 @@ package com.logitrack.logitrack.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.logitrack.logitrack.dto.BodegaDTO;
+import com.logitrack.logitrack.exceptions.BusinessException;
 import com.logitrack.logitrack.entities.Bodega;
 import com.logitrack.logitrack.repositories.BodegaRepository;
 
@@ -28,7 +30,7 @@ public class BodegaService {
     @Transactional
     public BodegaDTO findById(Long id) {
         Bodega bodega = bodegaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bodega no encontrada con id: " + id));
+                .orElseThrow(() -> new BusinessException("Bodega no encontrada con id: " + id, HttpStatus.NOT_FOUND));
         return convertToDto(bodega);
     }
 
@@ -95,7 +97,7 @@ public class BodegaService {
     @Transactional
     public void delete(Long id) {
         if (!bodegaRepository.existsById(id)) {
-            throw new RuntimeException("Bodega no encontrada con id: " + id);
+            throw new BusinessException("Bodega no encontrada con id: " + id, HttpStatus.NOT_FOUND);
         }
         bodegaRepository.deleteById(id);
     }

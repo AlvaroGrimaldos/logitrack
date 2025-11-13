@@ -3,9 +3,11 @@ package com.logitrack.logitrack.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.logitrack.logitrack.dto.InventarioDTO;
+import com.logitrack.logitrack.exceptions.BusinessException;
 import com.logitrack.logitrack.entities.Inventario;
 import com.logitrack.logitrack.repositories.InventarioRepository;
 import com.logitrack.logitrack.repositories.ProductoRepository;
@@ -32,7 +34,7 @@ public class InventarioService {
     @Transactional
     public InventarioDTO findById(Long id) {
         Inventario inventario = inventarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventario no encontrado con id: " + id));
+                .orElseThrow(() -> new BusinessException("Inventario no encontrado con id: " + id, HttpStatus.NOT_FOUND));
         return convertToDto(inventario);
     }
 
@@ -40,7 +42,7 @@ public class InventarioService {
     public List<InventarioDTO> findByProductoId(Long productoId) {
         // Validar que el producto existe
         if (!productoRepository.existsById(productoId)) {
-            throw new RuntimeException("Producto no encontrado con id: " + productoId);
+            throw new BusinessException("Producto no encontrado con id: " + productoId, HttpStatus.NOT_FOUND);
         }
         return inventarioRepository.findByProductoId(productoId).stream()
                 .map(this::convertToDto)
@@ -51,7 +53,7 @@ public class InventarioService {
     public List<InventarioDTO> findByBodegaId(Long bodegaId) {
         // Validar que la bodega existe
         if (!bodegaRepository.existsById(bodegaId)) {
-            throw new RuntimeException("Bodega no encontrada con id: " + bodegaId);
+            throw new BusinessException("Bodega no encontrada con id: " + bodegaId, HttpStatus.NOT_FOUND);
         }
         return inventarioRepository.findByBodegaId(bodegaId).stream()
                 .map(this::convertToDto)
@@ -62,7 +64,7 @@ public class InventarioService {
     public InventarioDTO findByProductoAndBodega(Long productoId, Long bodegaId) {
         Inventario inventario = inventarioRepository.findByProductoIdAndBodegaId(productoId, bodegaId).stream()
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Inventario no encontrado para producto: " + productoId + " y bodega: " + bodegaId));
+                .orElseThrow(() -> new BusinessException("Inventario no encontrado para producto: " + productoId + " y bodega: " + bodegaId, HttpStatus.NOT_FOUND));
         return convertToDto(inventario);
     }
 
@@ -70,28 +72,28 @@ public class InventarioService {
     public InventarioDTO save(InventarioDTO dto) {
         // Validaciones de negocio
         if (dto.getProductoId() == null) {
-            throw new RuntimeException("El id del producto es obligatorio");
+            throw new BusinessException("El id del producto es obligatorio", HttpStatus.BAD_REQUEST);
         }
         if (dto.getBodegaId() == null) {
-            throw new RuntimeException("El id de la bodega es obligatorio");
+            throw new BusinessException("El id de la bodega es obligatorio", HttpStatus.BAD_REQUEST);
         }
         if (dto.getStockActual() == null || dto.getStockActual() < 0) {
-            throw new RuntimeException("El stock actual no puede ser negativo");
+            throw new BusinessException("El stock actual no puede ser negativo", HttpStatus.BAD_REQUEST);
         }
 
         // Verificar que el producto existe
         if (!productoRepository.existsById(dto.getProductoId())) {
-            throw new RuntimeException("Producto no encontrado con id: " + dto.getProductoId());
+            throw new BusinessException("Producto no encontrado con id: " + dto.getProductoId(), HttpStatus.NOT_FOUND);
         }
 
         // Verificar que la bodega existe
         if (!bodegaRepository.existsById(dto.getBodegaId())) {
-            throw new RuntimeException("Bodega no encontrada con id: " + dto.getBodegaId());
+            throw new BusinessException("Bodega no encontrada con id: " + dto.getBodegaId(), HttpStatus.NOT_FOUND);
         }
 
         // Verificar que no existe inventario duplicado (mismo producto y bodega)
         if (inventarioRepository.existsByProductoIdAndBodegaId(dto.getProductoId(), dto.getBodegaId())) {
-            throw new RuntimeException("Ya existe inventario para el producto: " + dto.getProductoId() + " en la bodega: " + dto.getBodegaId());
+            throw new BusinessException("Ya existe inventario para el producto: " + dto.getProductoId() + " en la bodega: " + dto.getBodegaId(), HttpStatus.CONFLICT);
         }
 
         Inventario inventario = new Inventario();
@@ -106,19 +108,19 @@ public class InventarioService {
     @Transactional
     public InventarioDTO update(Long id, InventarioDTO dto) {
         Inventario inventario = inventarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventario no encontrado con id: " + id));
+                .orElseThrow(() -> new BusinessException("Inventario no encontrado con id: " + id, HttpStatus.NOT_FOUND));
 
         // Validaciones de negocio
         if (dto.getStockActual() == null || dto.getStockActual() < 0) {
-            throw new RuntimeException("El stock actual no puede ser negativo");
+            throw new BusinessException("El stock actual no puede ser negativo", HttpStatus.BAD_REQUEST);
         }
 
         // Si cambia producto o bodega, verificar que existen
         if (dto.getProductoId() != null && !productoRepository.existsById(dto.getProductoId())) {
-            throw new RuntimeException("Producto no encontrado con id: " + dto.getProductoId());
+            throw new BusinessException("Producto no encontrado con id: " + dto.getProductoId(), HttpStatus.NOT_FOUND);
         }
         if (dto.getBodegaId() != null && !bodegaRepository.existsById(dto.getBodegaId())) {
-            throw new RuntimeException("Bodega no encontrada con id: " + dto.getBodegaId());
+            throw new BusinessException("Bodega no encontrada con id: " + dto.getBodegaId(), HttpStatus.NOT_FOUND);
         }
 
         // Verificar duplicado si cambia producto o bodega (excluyendo el mismo id)
@@ -128,7 +130,7 @@ public class InventarioService {
         inventarioRepository.findByProductoIdAndBodegaIdAndIdNot(productoId, bodegaId, id).stream()
                 .findAny()
                 .ifPresent(inv -> {
-                    throw new RuntimeException("Ya existe inventario para el producto: " + productoId + " en la bodega: " + bodegaId);
+                    throw new BusinessException("Ya existe inventario para el producto: " + productoId + " en la bodega: " + bodegaId, HttpStatus.CONFLICT);
                 });
 
         if (dto.getProductoId() != null) {
@@ -148,7 +150,7 @@ public class InventarioService {
     @Transactional
     public void delete(Long id) {
         if (!inventarioRepository.existsById(id)) {
-            throw new RuntimeException("Inventario no encontrado con id: " + id);
+            throw new BusinessException("Inventario no encontrado con id: " + id, HttpStatus.NOT_FOUND);
         }
         inventarioRepository.deleteById(id);
     }
