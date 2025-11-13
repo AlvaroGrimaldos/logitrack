@@ -13,6 +13,12 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>{
 
     List<Producto> findByNombre(String nombre);
 
+    // Busca ignorando mayúsculas/minúsculas
+    List<Producto> findByNombreIgnoreCase(String nombre);
+
+    // Comprueba existencia por nombre (case-insensitive)
+    boolean existsByNombreIgnoreCase(String nombre);
+
     List<Producto> findByPrecioGreaterThan(BigDecimal precio);
 
     List<Producto> findByCategoria(String categoria);
