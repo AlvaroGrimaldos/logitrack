@@ -49,7 +49,7 @@ public class Bodega {
     private Long encargadoId;
 
     @Column(nullable = false) 
-    private boolean activo;
+    private boolean activo = true;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
