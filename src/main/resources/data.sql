@@ -1,11 +1,11 @@
 use logitrack_db;
 
 INSERT INTO usuario (nombre, email, password_hash, rol) VALUES
-('Admin General', 'admin@empresa.com', 'adminpass123', 'admin'),
-('Encargado Almacén 1', 'encargado1@empresa.com', 'passencargado1', 'empleado'),
-('Encargado Almacén 2', 'encargado2@empresa.com', 'passencargado2', 'empleado'),
-('Empleado Logística', 'empleado@empresa.com', 'passemp', 'empleado'),
-('Super Admin', 'superadmin@empresa.com', 'supersecure', 'admin');
+('Admin General', 'admin@empresa.com', 'adminpass123', 'ADMIN'),
+('Encargado Almacén 1', 'encargado1@empresa.com', 'passencargado1', 'EMPLEADO'),
+('Encargado Almacén 2', 'encargado2@empresa.com', 'passencargado2', 'EMPLEADO'),
+('Empleado Logística', 'empleado@empresa.com', 'passemp', 'EMPLEADO'),
+('Super Admin', 'superadmin@empresa.com', 'supersecure', 'ADMIN');
 
 INSERT INTO bodega (nombre, ubicacion, capacidad, encargado_id) VALUES
 ('Almacén Principal', 'Calle 10 # 5-20, Centro', 5000, 2),
