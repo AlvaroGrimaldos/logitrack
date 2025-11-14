@@ -1,9 +1,9 @@
 package com.logitrack.logitrack.enums;
 
 public enum TipoMovimiento {
-    ENTRADA("entrada"),
-    SALIDA("salida"), 
-    TRANSFERENCIA("transferencia");
+    ENTRADA("ENTRADA"),
+    SALIDA("SALIDA"), 
+    TRANSFERENCIA("TRANSFERENCIA");
     
     private final String valor;
     

@@ -29,11 +29,11 @@ INSERT INTO inventario (producto_id, bodega_id, stock_actual) VALUES
 (5, 2, 65);  -- Kit de Herramientas en Bodega Norte
 
 INSERT INTO movimiento_inventario (fecha, tipo, usuario_id, bodega_origen_id, bodega_destino_id) VALUES
-('2025-11-13 10:00:00', 'entrada', 1, NULL, 1),
-('2025-11-13 11:30:00', 'salida', 4, 1, NULL),
-('2025-11-13 14:00:00', 'transferencia', 2, 2, 3),
-('2025-11-14 09:00:00', 'entrada', 1, NULL, 2),
-('2025-11-14 10:30:00', 'salida', 4, 3, NULL);
+('2025-11-13 10:00:00', 'ENTRADA', 1, NULL, 1),
+('2025-11-13 11:30:00', 'SALIDA', 4, 1, NULL),
+('2025-11-13 14:00:00', 'TRANSFERENCIA', 2, 2, 3),
+('2025-11-14 09:00:00', 'ENTRADA', 1, NULL, 2),
+('2025-11-14 10:30:00', 'SALIDA', 4, 3, NULL);
 
 INSERT INTO movimiento_detalle (movimiento_id, producto_id, cantidad) VALUES
 (1, 1, 20), -- Entrada de 20 Laptop Pro X
@@ -43,8 +43,8 @@ INSERT INTO movimiento_detalle (movimiento_id, producto_id, cantidad) VALUES
 (5, 4, 50); -- Salida de 50 Resma Papel A4
 
 INSERT INTO auditoria_cambios (fecha_hora, usuario_id, tipo_operacion, entidad_afectada, id_entidad_afectada, valores_antes, valores_despues) VALUES
-('2025-11-13 09:50:00', 1, 'insert', 'usuario', 6, NULL, '{"nombre": "Nuevo Usuario", "rol": "empleado"}'),
-('2025-11-13 10:15:00', 1, 'update', 'bodega', 1, '{"capacidad": 5000}', '{"capacidad": 5500}'),
-('2025-11-13 12:00:00', 2, 'insert', 'producto', 6, NULL, '{"nombre": "Mouse Inalámbrico", "precio": 25.00}'),
-('2025-11-13 15:30:00', 1, 'delete', 'inventario', 101, '{"producto_id": 4, "bodega_id": 3}', NULL),
-('2025-11-14 11:00:00', 3, 'update', 'producto', 4, '{"precio": 5.75}', '{"precio": 6.00}');
+('2025-11-13 09:50:00', 1, 'INSERT', 'usuario', 6, NULL, '{"nombre": "Nuevo Usuario", "rol": "empleado"}'),
+('2025-11-13 10:15:00', 1, 'UPDATE', 'bodega', 1, '{"capacidad": 5000}', '{"capacidad": 5500}'),
+('2025-11-13 12:00:00', 2, 'INSERT', 'producto', 6, NULL, '{"nombre": "Mouse Inalámbrico", "precio": 25.00}'),
+('2025-11-13 15:30:00', 1, 'DELETE', 'inventario', 101, '{"producto_id": 4, "bodega_id": 3}', NULL),
+('2025-11-14 11:00:00', 3, 'UPDATE', 'producto', 4, '{"precio": 5.75}', '{"precio": 6.00}');
