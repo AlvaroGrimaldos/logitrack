@@ -1,9 +1,9 @@
 package com.logitrack.logitrack.enums;
 
 public enum TipoOperacion {
-    INSERT("insert"),
-    UPDATE("update"),
-    DELETE("delete");
+    INSERT("INSERT"),
+    UPDATE("UPDATE"),
+    DELETE("UPDATE");
     
     private final String valor;
     

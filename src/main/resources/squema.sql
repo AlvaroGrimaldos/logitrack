@@ -44,7 +44,7 @@ create table inventario (
 create table movimiento_inventario (
 	id bigint auto_increment primary key,
 	fecha datetime not null,
-	tipo enum('entrada', 'salida', 'transferencia') not null,
+	tipo enum('ENTRADA', 'SALIDA', 'TRANSFERENCIA') not null,
 	usuario_id bigint not null,
 	bodega_origen_id bigint,
 	bodega_destino_id bigint,
@@ -66,7 +66,7 @@ create table auditoria_cambios (
 	id bigint auto_increment primary key,
 	fecha_hora datetime not null,
 	usuario_id bigint not null,
-	tipo_operacion enum('insert', 'update', 'delete') not null,
+	tipo_operacion enum('INSERT', 'UPDATE', 'DELETE') not null,
 	entidad_afectada varchar(100) not null,
 	id_entidad_afectada bigint not null,
 	valores_antes JSON,
