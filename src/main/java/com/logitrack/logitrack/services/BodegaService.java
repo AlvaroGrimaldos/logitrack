@@ -61,7 +61,6 @@ public class BodegaService {
     @Transactional
     public BodegaDTO save(BodegaDTO dto) {
         //Buscar el encargado de la bodega
-        //TODO CUANDO SE HAGA MERGE
         Usuario usuario = usuarioRepository.findAdminById(dto.getEncargadoId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado o Usuario sin rol de ADMIN con id: " + dto.getEncargadoId()));
         
@@ -81,7 +80,6 @@ public class BodegaService {
         Bodega bodega = bodegaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bodega no encontrada con id: " + id));
             
-        // TODO Arreglar cuando se haga merge
         if (!bodega.getEncargado().getId().equals(dto.getEncargadoId())) {
             Usuario nuevoUsuario = usuarioRepository.findById(dto.getEncargadoId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getEncargadoId()));
