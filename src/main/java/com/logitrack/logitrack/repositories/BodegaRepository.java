@@ -16,6 +16,6 @@ public interface BodegaRepository extends JpaRepository<Bodega, Long>{
 
     List<Bodega> findByCapacidadGreaterThan(Integer capacidad);
 
-    @Query("select b from Bodega b where b.usuario.nombre = :nombreEncargado")
+    @Query("select b from Bodega b where b.encargado.nombre = :nombreEncargado")
     List<Bodega> findByEncargadoNombre(@Param("nombreEncargado") String nombreEncargado);
 }

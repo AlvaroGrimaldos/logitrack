@@ -5,7 +5,7 @@ create table usuario (
 	nombre varchar(100) not null,
 	email varchar(200) not null unique,
 	password_hash varchar(300) not null,
-	rol enum('admin', 'empleado') not null,
+	rol enum('ADMIN', 'EMPLEADO') not null,
 	activo boolean default true,
 	created_at datetime default CURRENT_TIMESTAMP()
 );

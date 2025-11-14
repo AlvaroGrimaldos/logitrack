@@ -9,7 +9,6 @@ import com.logitrack.logitrack.repositories.ProductoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -141,26 +140,23 @@ public class MovimientoService {
     // ✅ ACTUALIZAR INVENTARIO (Método privado)
     private void actualizarInventario(Long bodegaId, Long productoId, Integer cantidad, boolean esEntrada) {
         Inventario inventario = inventarioRepository.findByProductoIdAndBodegaId(productoId, bodegaId)
-                .orElse(new Inventario());
-        
-        if (inventario.getId() == null) {
-            // Crear nuevo registro de inventario
-            Producto producto = productoRepository.findById(productoId)
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + productoId));
-            Bodega bodega = new Bodega();
-            bodega.setId(bodegaId);
-            
-            inventario.setProducto(producto);
-            inventario.setBodega(bodega);
-            inventario.setStockActual(0);
-        }
+                .orElseGet(() -> {
+                    // Crear nuevo registro de inventario
+                    Inventario nuevoInventario = new Inventario();
+                    nuevoInventario.setProductoId(productoId);
+                    nuevoInventario.setBodegaId(bodegaId);
+                    nuevoInventario.setStockActual(0);
+                    return nuevoInventario;
+                });
 
         int nuevoStock = esEntrada 
             ? inventario.getStockActual() + cantidad
             : inventario.getStockActual() - cantidad;
 
         if (nuevoStock < 0) {
-            throw new RuntimeException("Stock insuficiente para el producto: " + inventario.getProducto().getNombre());
+            Producto producto = productoRepository.findById(productoId)
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + productoId));
+            throw new RuntimeException("Stock insuficiente para el producto: " + producto.getNombre());
         }
 
         inventario.setStockActual(nuevoStock);

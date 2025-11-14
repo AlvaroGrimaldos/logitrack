@@ -1,6 +1,7 @@
 package com.logitrack.logitrack.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
 
     List<Inventario> findByBodegaId(Long bodegaId);
 
-    List<Inventario> findByProductoIdAndBodegaId(Long productoId, Long bodegaId);
+    Optional<Inventario> findByProductoIdAndBodegaId(Long productoId, Long bodegaId);
 
     // Verifica si existe inventario para producto y bodega específicos
     boolean existsByProductoIdAndBodegaId(Long productoId, Long bodegaId);

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import com.logitrack.logitrack.dto.BodegaDTO;
 import com.logitrack.logitrack.exceptions.BusinessException;
 import com.logitrack.logitrack.entities.Bodega;
+import com.logitrack.logitrack.entities.Usuario;
 import com.logitrack.logitrack.repositories.BodegaRepository;
+import com.logitrack.logitrack.repositories.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class BodegaService {
 
     private final BodegaRepository bodegaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional
     public List<BodegaDTO> findAll() {
@@ -58,15 +61,14 @@ public class BodegaService {
     @Transactional
     public BodegaDTO save(BodegaDTO dto) {
         //Buscar el encargado de la bodega
-        //TODO CUANDO SE HAGA MERGE
-        //Usuario usuario = usuarioRepository.findByIdAdmin(dto.getEncargadoId())
-        //        .orElseThrow(() -> new RuntimeException("Usuario no encontrado o Usuario sin rol de ADMIN con id: " + dto.getEncargadoId()));
+        Usuario usuario = usuarioRepository.findAdminById(dto.getEncargadoId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado o Usuario sin rol de ADMIN con id: " + dto.getEncargadoId()));
         
         Bodega bodega = new Bodega();
         bodega.setNombre(dto.getNombre());
         bodega.setUbicacion(dto.getUbicacion());
         bodega.setCapacidad(dto.getCapacidad());
-        bodega.setEncargadoId(dto.getEncargadoId());
+        bodega.setEncargado(usuario);
         bodega.setActivo(true);
 
         Bodega saved = bodegaRepository.save(bodega);
@@ -78,12 +80,11 @@ public class BodegaService {
         Bodega bodega = bodegaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bodega no encontrada con id: " + id));
             
-        // TODO Arreglar cuando se haga merge
-        //if (!bodega.getEncargadoId().equals(dto.getEncargadoId())) {
-        //    Usuario nuevoUsuario = usuarioRepository.findById(dto.getEncargadoId())
-        //        .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getEncargadoId()));
-        //    bodega.setEncargadoId(nuevoUsuario);
-        //}
+        if (!bodega.getEncargado().getId().equals(dto.getEncargadoId())) {
+            Usuario nuevoUsuario = usuarioRepository.findById(dto.getEncargadoId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getEncargadoId()));
+            bodega.setEncargado(nuevoUsuario);
+        }
 
         bodega.setNombre(dto.getNombre());
         bodega.setCapacidad(dto.getCapacidad());
@@ -108,7 +109,7 @@ public class BodegaService {
         dto.setNombre(bodega.getNombre());
         dto.setUbicacion(bodega.getUbicacion());
         dto.setCapacidad(bodega.getCapacidad());
-        dto.setEncargadoId(bodega.getEncargadoId());
+        dto.setEncargadoId(bodega.getEncargado().getId());
         dto.setActivo(bodega.isActivo());
         dto.setCreatedAt(bodega.getCreatedAt());
         dto.setUpdaateAt(bodega.getUpdateAt());

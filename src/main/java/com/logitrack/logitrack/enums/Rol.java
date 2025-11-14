@@ -1,8 +1,8 @@
 package com.logitrack.logitrack.enums;
 
 public enum Rol {
-    ADMIN("admin"),
-    EMPLEADO("empleado");
+    ADMIN("ADMIN"),
+    EMPLEADO("EMPLEADO");
     
     private final String valor;
     
