@@ -5,11 +5,16 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,16 +42,10 @@ public class Bodega {
     @Column(nullable = true)
     private Integer capacidad;
 
-    // Usamos un campo Long para almacenar el id del usuario encargado.
-    // Cuando la clase `Usuario` exista en el proyecto, puedes cambiarlo a:
-    //
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "encargado_id", nullable = false)
-    // @JsonBackReference
-    // private Usuario encargado;
-    //
-    @Column(name = "encargado_id", nullable = false)
-    private Long encargadoId;
+     @ManyToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "encargado_id", nullable = false)
+     @JsonBackReference
+     private Usuario encargado;
 
     @Column(nullable = false) 
     private boolean activo = true;
