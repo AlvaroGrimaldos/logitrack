@@ -1,0 +1,128 @@
+/* Auditoria Styles */
+.auditoria-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.stat-card {
+    background: var(--bg-white);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.auditoria-list {
+    background: var(--bg-white);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-top: 24px;
+}
+
+.auditoria-item {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: start;
+}
+
+.auditoria-item:last-child {
+    border-bottom: none;
+}
+
+.auditoria-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-bg);
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.auditoria-info {
+    flex: 1;
+}
+
+.auditoria-info h4 {
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.auditoria-info p {
+    color: var(--text-light);
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+.auditoria-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-insert {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-update {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.auditoria-details {
+    margin-top: 8px;
+    padding: 12px;
+    background: var(--bg-gray);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.json-view {
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auditoria-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .auditoria-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .filters {
+        flex-direction: column;
+    }
+}
