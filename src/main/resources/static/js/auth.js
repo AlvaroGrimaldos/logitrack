@@ -36,6 +36,7 @@ async function handleLogin(event) {
         }
         
         const data = await response.json();
+        console.log(data)
         
         // Guardar token y información del usuario
         Storage.setToken(data.token);
