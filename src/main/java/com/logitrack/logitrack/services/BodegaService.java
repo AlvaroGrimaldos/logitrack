@@ -25,14 +25,14 @@ public class BodegaService {
 
     @Transactional
     public List<BodegaDTO> findAll() {
-        return bodegaRepository.findAll().stream()
+        return bodegaRepository.findAllActive().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public BodegaDTO findById(Long id) {
-        Bodega bodega = bodegaRepository.findById(id)
+        Bodega bodega = bodegaRepository.findByIdActive(id)
                 .orElseThrow(() -> new BusinessException("Bodega no encontrada con id: " + id, HttpStatus.NOT_FOUND));
         return convertToDto(bodega);
     }
@@ -100,7 +100,7 @@ public class BodegaService {
         if (!bodegaRepository.existsById(id)) {
             throw new BusinessException("Bodega no encontrada con id: " + id, HttpStatus.NOT_FOUND);
         }
-        bodegaRepository.deleteById(id);
+        bodegaRepository.softDeleteById(id);
     }
 
     private BodegaDTO convertToDto(Bodega bodega) {

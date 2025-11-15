@@ -23,14 +23,14 @@ public class ProductoService {
 
     @Transactional
     public List<ProductoDTO> findAll() {
-        return productoRepository.findAll().stream()
+        return productoRepository.findAllActive().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public ProductoDTO findById(Long id) {
-        Producto producto = productoRepository.findById(id)
+        Producto producto = productoRepository.findByIdActive(id)
                 .orElseThrow(() -> new BusinessException("Producto no encontrado con id: " + id, HttpStatus.NOT_FOUND));
         return convertToDto(producto);
     }
@@ -109,7 +109,7 @@ public class ProductoService {
         if (!productoRepository.existsById(id)) {
             throw new BusinessException("Producto no encontrado con id: " + id, HttpStatus.NOT_FOUND);
         }
-        productoRepository.deleteById(id);
+        productoRepository.softDeleteById(id);
     }
 
     private ProductoDTO convertToDto(Producto producto) {
