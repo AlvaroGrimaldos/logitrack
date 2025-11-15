@@ -41,12 +41,12 @@ public class BodegaController {
         return ResponseEntity.ok(bodegaService.findById(id));
     }
 
-    @GetMapping("/usuarios/{encargadoId}")
+    @GetMapping("/encargado/id/{encargadoId}")
     public ResponseEntity<List<BodegaDTO>> findByEncargadoId(@PathVariable Long encargadoId) {
         return ResponseEntity.ok(bodegaService.findByEncargadoId(encargadoId));
     }
 
-    @GetMapping("/usuarios/{encargadoNombre}")
+    @GetMapping("/encargado/nombre/{encargadoNombre}")
     public ResponseEntity<List<BodegaDTO>> findByEncargadoNombre(@PathVariable String encargadoNombre) {
         return ResponseEntity.ok(bodegaService.findByEncargadoNombre(encargadoNombre));
     }
