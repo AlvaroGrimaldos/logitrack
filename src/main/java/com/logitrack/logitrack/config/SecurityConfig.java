@@ -39,6 +39,25 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // ✅ RECURSOS ESTÁTICOS - CORREGIDO
+                .requestMatchers(
+                    "/",
+                    "/index.html",
+                    "/favicon.ico"
+                ).permitAll()
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/js/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
+                .requestMatchers("/img/**").permitAll()
+                .requestMatchers("/assets/**").permitAll()
+                .requestMatchers("*.html").permitAll()
+                .requestMatchers("*.css").permitAll()
+                .requestMatchers("*.js").permitAll()
+                .requestMatchers("*.png").permitAll()
+                .requestMatchers("*.jpg").permitAll()
+                .requestMatchers("*.jpeg").permitAll()
+                .requestMatchers("*.gif").permitAll()
+
                 // ✅ Endpoints públicos
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/docs").permitAll()
@@ -49,6 +68,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/productos/**").authenticated()
                 .requestMatchers("/api/movimientos/**").authenticated()
                 .requestMatchers("/api/inventario/**").authenticated()
+                .requestMatchers("/api/inventarios/**").authenticated()
                 .requestMatchers("/api/auditoria/**").authenticated()
                 .requestMatchers("/api/usuarios/**").authenticated()
                 .requestMatchers("/api/reportes/**").authenticated()
@@ -82,9 +102,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // En producción especificar dominios
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type",
+            "Accept",
+            "X-Requested-With"
+        ));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

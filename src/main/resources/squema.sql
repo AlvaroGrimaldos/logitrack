@@ -1,6 +1,6 @@
 use logitrack_db;
 
-create table usuario (
+create table IF NOT EXISTS usuario (
 	id bigint auto_increment primary key,
 	nombre varchar(100) not null,
 	email varchar(200) not null unique,
@@ -10,7 +10,7 @@ create table usuario (
 	created_at datetime default CURRENT_TIMESTAMP()
 );
 
-create table bodega (
+create table IF NOT EXISTS bodega (
 	id bigint auto_increment primary key,
 	nombre varchar(100) not null,
 	ubicacion varchar(255) not null,
@@ -22,7 +22,7 @@ create table bodega (
 	foreign key(encargado_id) references usuario(id)
 );
 
-create table producto (
+create table IF NOT EXISTS producto (
 	id bigint auto_increment primary key,
 	nombre varchar(100) not null,
 	categoria varchar(50) not null,
@@ -32,7 +32,7 @@ create table producto (
 	update_at datetime default CURRENT_TIMESTAMP() on update current_timestamp()
 );
 
-create table inventario (
+create table IF NOT EXISTS inventario (
 	id bigint auto_increment primary key,
 	producto_id bigint not null,
 	bodega_id bigint not null,
@@ -41,7 +41,7 @@ create table inventario (
 	foreign key(bodega_id) references bodega(id)
 );
 
-create table movimiento_inventario (
+create table IF NOT EXISTS movimiento_inventario (
 	id bigint auto_increment primary key,
 	fecha datetime not null,
 	tipo enum('ENTRADA', 'SALIDA', 'TRANSFERENCIA') not null,
@@ -53,7 +53,7 @@ create table movimiento_inventario (
 	foreign key (bodega_destino_id) references bodega(id)
 );
 
-create table movimiento_detalle (
+create table IF NOT EXISTS movimiento_detalle (
 	id bigint auto_increment primary key,
 	movimiento_id bigint not null,
 	producto_id bigint not null,
@@ -62,7 +62,7 @@ create table movimiento_detalle (
 	foreign key(producto_id) references producto(id)
 );
 
-create table auditoria_cambios (
+create table IF NOT EXISTS auditoria_cambios (
 	id bigint auto_increment primary key,
 	fecha_hora datetime not null,
 	usuario_id bigint not null,

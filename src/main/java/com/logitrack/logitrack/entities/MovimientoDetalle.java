@@ -1,9 +1,12 @@
 package com.logitrack.logitrack.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "movimiento_detalle")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MovimientoDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,6 +14,7 @@ public class MovimientoDetalle {
     
     @ManyToOne
     @JoinColumn(name = "movimiento_id", nullable = false)
+    @JsonBackReference
     private MovimientoInventario movimiento;
     
     @ManyToOne

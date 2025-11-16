@@ -1,11 +1,14 @@
 package com.logitrack.logitrack.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.logitrack.logitrack.enums.Rol;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuario")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +20,7 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 200)
     private String email;
     
+    @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 300)
     private String passwordHash;
     

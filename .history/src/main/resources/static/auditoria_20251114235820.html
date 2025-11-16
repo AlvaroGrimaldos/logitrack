@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría - LogiTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/auditoria.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">LogiTrack</div>
+                <nav class="nav-links">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="movimientos.html" class="nav-link">Movimientos</a>
+                    <a href="bodegas.html" class="nav-link">Bodegas</a>
+                    <a href="productos.html" class="nav-link">Productos</a>
+                    <a href="auditoria.html" class="nav-link active">Auditoría</a>
+                </nav>
+                <div class="user-menu">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Auditoría del Sistema</h1>
+            <p>Registro de todas las operaciones realizadas</p>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="filterOperacion">Tipo de Operación</label>
+                <select id="filterOperacion" onchange="loadAuditoria()">
+                    <option value="">Todas</option>
+                    <option value="INSERT">Creación</option>
+                    <option value="UPDATE">Actualización</option>
+                    <option value="DELETE">Eliminación</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterEntidad">Entidad</label>
+                <select id="filterEntidad" onchange="loadAuditoria()">
+                    <option value="">Todas</option>
+                    <option value="Usuario">Usuario</option>
+                    <option value="Bodega">Bodega</option>
+                    <option value="Producto">Producto</option>
+                    <option value="MovimientoInventario">Movimiento</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterFechaInicio">Fecha Inicio</label>
+                <input type="date" id="filterFechaInicio" onchange="loadAuditoria()">
+            </div>
+            <div class="filter-group">
+                <label for="filterFechaFin">Fecha Fin</label>
+                <input type="date" id="filterFechaFin" onchange="loadAuditoria()">
+            </div>
+            <button class="btn btn-secondary" onclick="clearFilters()">Limpiar</button>
+        </div>
+
+        <div class="auditoria-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalRegistros">0</div>
+                <div class="stat-label">Total Registros</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="registrosHoy">0</div>
+                <div class="stat-label">Hoy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="operacionesCreacion">0</div>
+                <div class="stat-label">Creaciones</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="operacionesActualizacion">0</div>
+                <div class="stat-label">Actualizaciones</div>
+            </div>
+        </div>
+
+        <div id="auditoriaList" class="auditoria-list">
+            <div class="loading">Cargando registros de auditoría...</div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/auditoria.js"></script>
+</body>
+</html>

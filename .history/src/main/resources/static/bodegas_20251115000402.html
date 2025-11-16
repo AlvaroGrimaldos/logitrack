@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bodegas - LogiTrack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/bodegas.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">LogiTrack</div>
+                <nav class="nav-links">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="movimientos.html" class="nav-link">Movimientos</a>
+                    <a href="bodegas.html" class="nav-link active">Bodegas</a>
+                    <a href="productos.html" class="nav-link">Productos</a>
+                    <a href="auditoria.html" class="nav-link">Auditoría</a>
+                </nav>
+                <div class="user-menu">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Gestión de Bodegas</h1>
+            <p>Administrar bodegas y sus responsables</p>
+            <button class="btn btn-primary" onclick="showModal('create')">+ Nueva Bodega</button>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="searchBodega">Buscar</label>
+                <input type="text" id="searchBodega" placeholder="Nombre de bodega..." onkeyup="filterBodegas()">
+            </div>
+            <div class="filter-group">
+                <label for="filterActivo">Estado</label>
+                <select id="filterActivo" onchange="filterBodegas()">
+                    <option value="">Todos</option>
+                    <option value="true">Activas</option>
+                    <option value="false">Inactivas</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="bodegasList" class="bodegas-grid">
+            <div class="loading">Cargando bodegas...</div>
+        </div>
+    </main>
+
+    <!-- Modal para crear/editar bodega -->
+    <div id="bodegaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Nueva Bodega</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="bodegaForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación *</label>
+                    <input type="text" id="ubicacion" name="ubicacion" required>
+                </div>
+                <div class="form-group">
+                    <label for="capacidad">Capacidad</label>
+                    <input type="number" id="capacidad" name="capacidad" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="encargadoId">Encargado *</label>
+                    <select id="encargadoId" name="encargadoId" required>
+                        <option value="">Seleccionar encargado...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="activo" name="activo" checked>
+                        Bodega activa
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Bodega</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/bodegas.js"></script>
+</body>
+</html>
