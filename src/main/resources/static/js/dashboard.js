@@ -19,7 +19,7 @@ async function loadDashboardData() {
         // Cargar productos
         const productosResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.PRODUCTOS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -31,7 +31,7 @@ async function loadDashboardData() {
         // Cargar bodegas
         const bodegasResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.BODEGAS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -43,7 +43,7 @@ async function loadDashboardData() {
         // Cargar movimientos de hoy (simulado por ahora)
         const movimientosResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.MOVIMIENTOS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -64,7 +64,7 @@ async function loadRecentMovimientos() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.MOVIMIENTOS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
 

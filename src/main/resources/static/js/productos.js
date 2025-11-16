@@ -21,7 +21,7 @@ async function loadProductos() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.PRODUCTOS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -166,7 +166,7 @@ document.getElementById('productoForm').addEventListener('submit', async functio
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Bearer': `${Storage.getToken()}`
+                    'Authorization': `Bearer ${Storage.getToken()}`
                 },
                 body: JSON.stringify(productoData)
             });
@@ -175,7 +175,7 @@ document.getElementById('productoForm').addEventListener('submit', async functio
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Bearer': `${Storage.getToken()}`
+                    'Authorization': `Bearer ${Storage.getToken()}`
                 },
                 body: JSON.stringify(productoData)
             });
@@ -215,7 +215,7 @@ async function toggleProductoStatus(id, newStatus) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             },
             body: JSON.stringify({
                 ...producto,

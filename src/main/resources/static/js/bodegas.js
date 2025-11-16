@@ -23,7 +23,7 @@ async function loadBodegas() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.BODEGAS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         

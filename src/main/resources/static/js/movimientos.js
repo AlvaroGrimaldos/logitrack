@@ -163,7 +163,7 @@ async function loadBodegas() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.BODEGAS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -194,7 +194,7 @@ async function loadProductos() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.PRODUCTOS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -219,30 +219,75 @@ document.getElementById('movementForm').addEventListener('submit', async functio
         const formData = new FormData(this);
         const movimientoData = buildMovimientoData(formData);
         
-        const endpoint = getMovimientoEndpoint();
+        // 🔧 Validar que haya productos
+        if (movimientoData.detalles.length === 0) {
+            throw new Error('Debes agregar al menos un producto');
+        }
+        
+        // 🔧 Obtener y validar bodegas
+        const bodegaOrigenId = document.getElementById('bodegaOrigen').value;
+        const bodegaDestinoId = document.getElementById('bodegaDestino').value;
+        
+        if (!bodegaOrigenId) {
+            throw new Error('Debes seleccionar una bodega de origen');
+        }
+        
+        // 🔧 Construir endpoint según tipo
+        let endpoint;
+        switch (MOVIMIENTOS_STATE.currentMovementType) {
+            case 'ENTRADA':
+                endpoint = `${API_CONFIG.BASE_URL}/movimientos/entrada/${bodegaOrigenId}`;
+                break;
+            case 'SALIDA':
+                endpoint = `${API_CONFIG.BASE_URL}/movimientos/salida/${bodegaOrigenId}`;
+                break;
+            case 'TRANSFERENCIA':
+                if (!bodegaDestinoId) {
+                    throw new Error('Debes seleccionar una bodega de destino para transferencias');
+                }
+                endpoint = `${API_CONFIG.BASE_URL}/movimientos/transferencia/${bodegaOrigenId}/${bodegaDestinoId}`;
+                break;
+            default:
+                throw new Error('Tipo de movimiento no válido');
+        }
+        
+        console.log('📤 Enviando a:', endpoint);
+        console.log('📦 Datos:', movimientoData);
+        console.log('🔑 Token:', Storage.getToken());
+        
+        // 🔧 Hacer la petición
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             },
             body: JSON.stringify(movimientoData)
         });
         
+        console.log('📥 Response status:', response.status);
+        const responseData = await response.text();
+        console.log('📥 Response body:', responseData);
+        
         if (response.ok) {
             showNotification('Movimiento registrado exitosamente', 'success');
             resetForm();
-            // Recargar movimientos si estamos en esa pestaña
             if (document.getElementById('consultar').classList.contains('active')) {
                 loadMovimientos();
             }
         } else {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Error al registrar movimiento');
+            let errorMessage = 'Error al registrar movimiento';
+            try {
+                const errorData = JSON.parse(responseData);
+                errorMessage = errorData.error || errorData.message || errorMessage;
+            } catch (e) {
+                errorMessage = responseData || errorMessage;
+            }
+            throw new Error(errorMessage);
         }
         
     } catch (error) {
-        console.error('Error registrando movimiento:', error);
+        console.error('❌ Error registrando movimiento:', error);
         showNotification(error.message, 'error');
     }
 });
@@ -331,7 +376,7 @@ async function loadMovimientos() {
         
         const response = await fetch(url, {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
@@ -402,7 +447,7 @@ async function loadStock() {
         // Por ahora simulamos con datos de inventario
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.INVENTARIOS), {
             headers: {
-                'Bearer': `${Storage.getToken()}`
+                'Authorization': `Bearer ${Storage.getToken()}`
             }
         });
         
