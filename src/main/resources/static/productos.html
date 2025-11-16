@@ -107,38 +107,40 @@
     </main>
 
     <!-- Modal Producto -->
-    <div id="productoModal" class="modal">
-        <div class="modal-content">
+    <div id="productoModal" class="modal product-modal">
+        <div class="modal-content product-modal-content">
             <div class="modal-header">
                 <h3 id="productoModalTitle">Nuevo Producto</h3>
                 <span class="close" onclick="closeProductModal()">&times;</span>
             </div>
             <form id="productoForm">
-                <div class="form-group">
-                    <label for="productoNombre">Nombre *</label>
-                    <input type="text" id="productoNombre" name="nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="productoCategoria">Categoría *</label>
-                    <select id="productoCategoria" name="categoria" required>
-                        <option value="">Seleccionar categoría...</option>
-                        <option value="TECNOLOGIA">Tecnología</option>
-                        <option value="MUEBLES">Muebles</option>
-                        <option value="OFICINA">Oficina</option>
-                        <option value="HERRAMIENTAS">Herramientas</option>
-                        <option value="ELECTRODOMESTICOS">Electrodomésticos</option>
-                        <option value="MATERIALES">Materiales</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="productoPrecio">Precio *</label>
-                    <input type="number" id="productoPrecio" name="precio" step="0.01" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="productoActivo" name="activo" checked>
-                        Producto activo
-                    </label>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="productoNombre">Nombre *</label>
+                        <input type="text" id="productoNombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productoCategoria">Categoría *</label>
+                        <select id="productoCategoria" name="categoria" required>
+                            <option value="">Seleccionar categoría...</option>
+                            <option value="TECNOLOGIA">Tecnología</option>
+                            <option value="MUEBLES">Muebles</option>
+                            <option value="OFICINA">Oficina</option>
+                            <option value="HERRAMIENTAS">Herramientas</option>
+                            <option value="ELECTRODOMESTICOS">Electrodomésticos</option>
+                            <option value="MATERIALES">Materiales</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productoPrecio">Precio *</label>
+                        <input type="number" id="productoPrecio" name="precio" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group form-group--checkbox">
+                        <label>
+                            <input type="checkbox" id="productoActivo" name="activo" checked>
+                            Producto activo
+                        </label>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancelar</button>

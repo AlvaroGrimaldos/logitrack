@@ -77,6 +77,56 @@
     gap: 6px;
 }
 
+/* Modal y formulario específico para productos */
+.product-modal-content {
+    max-width: 520px;
+    width: 92%;
+    margin: 4% auto;
+    padding: 0;
+}
+
+.product-modal-content form {
+    padding: 18px 22px 22px 22px;
+}
+
+.product-modal-content .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+    align-items: start;
+}
+
+.product-modal-content .form-group {
+    margin-bottom: 0;
+}
+
+.product-modal-content .form-group--checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.product-modal-content .form-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Forzar inputs no tan anchos en pantallas grandes, y centrar internamente */
+@media (min-width: 900px) {
+    .product-modal-content { max-width: 520px; }
+}
+
+/* Responsive: en pantallas pequeñas pasar a una columna */
+@media (max-width: 768px) {
+    .product-modal-content .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .product-modal-content { width: 95%; margin: 8% auto; }
+}
+
 /* ========== RESPONSIVE PRODUCTOS ========== */
 
 /* Tablet */
