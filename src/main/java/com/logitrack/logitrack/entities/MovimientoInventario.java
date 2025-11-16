@@ -1,6 +1,7 @@
 package com.logitrack.logitrack.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.logitrack.logitrack.enums.TipoMovimiento;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "movimiento_inventario")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MovimientoInventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -41,8 +41,19 @@ async function loadDashboardData() {
         }
 
         // Cargar movimientos de hoy (simulado por ahora)
-        document.getElementById('movimientosHoy');
-        document.getElementById('usuariosActivos');
+        const movimientosResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.MOVIMIENTOS), {
+            headers: {
+                'Bearer': `${Storage.getToken()}`
+            }
+        });
+        
+        if (movimientosResponse.ok) {
+            const movimientos = await movimientosResponse.json();
+            document.getElementById('movimientosHoy').textContent = movimientos.length;
+        }
+        
+        // Cargar usuarios
+        document.getElementById('usuariosActivos').textContent = ("2");
 
     } catch (error) {
         console.error('Error cargando datos del dashboard:', error);
