@@ -19,11 +19,13 @@
     font-weight: 600;
     color: var(--text-dark);
     border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
 }
 
 .productos-table td {
     padding: 16px;
     border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
 }
 
 .productos-table tr:last-child td {
@@ -42,7 +44,7 @@
 .producto-category {
     padding: 4px 8px;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     background: var(--primary-bg);
     color: var(--primary-dark);
@@ -54,9 +56,9 @@
 }
 
 .producto-status {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 11px;
     font-weight: 600;
 }
 
@@ -72,20 +74,117 @@
 
 .producto-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
-/* Responsive para tabla */
+/* ========== RESPONSIVE PRODUCTOS ========== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .productos-table th,
+    .productos-table td {
+        padding: 12px;
+        font-size: 13px;
+    }
+}
+
+/* Mobile Large - Convertir tabla a cards */
 @media (max-width: 768px) {
     .productos-table-container {
-        overflow-x: auto;
+        overflow-x: visible;
+        background: transparent;
+        border: none;
     }
     
     .productos-table {
-        min-width: 600px;
+        display: block;
+        min-width: auto;
+    }
+    
+    .productos-table thead {
+        display: none;
+    }
+    
+    .productos-table tbody {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .productos-table tr {
+        display: block;
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 0;
+    }
+    
+    .productos-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-color);
+        border: none;
+    }
+    
+    .productos-table td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .productos-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-right: 12px;
+        font-size: 13px;
+    }
+    
+    /* Asignar labels a las celdas */
+    .productos-table td:nth-child(1)::before { content: "Producto"; }
+    .productos-table td:nth-child(2)::before { content: "Categoría"; }
+    .productos-table td:nth-child(3)::before { content: "Precio"; }
+    .productos-table td:nth-child(4)::before { content: "Estado"; }
+    .productos-table td:nth-child(5)::before { content: "Acciones"; }
+    
+    .producto-actions {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+    
+    .producto-actions .btn {
+        flex: 1;
+        min-width: 70px;
+        text-align: center;
+    }
+}
+
+/* Mobile Small */
+@media (max-width: 576px) {
+    .productos-table tr {
+        padding: 12px;
+    }
+    
+    .productos-table td {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .productos-table td::before {
+        margin-right: 0;
+        font-size: 12px;
     }
     
     .producto-actions {
-        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .producto-actions .btn {
+        flex: none;
+        width: calc(50% - 4px);
     }
 }
