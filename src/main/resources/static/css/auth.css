@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px;
 }
 
 .auth-container {
@@ -14,7 +14,7 @@
 
 .auth-card {
     background: var(--bg-white);
-    padding: 40px;
+    padding: 32px;
     border-radius: 16px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-color);
@@ -22,12 +22,12 @@
 
 .auth-header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
 }
 
 .auth-header h1 {
     color: var(--primary-color);
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     margin-bottom: 8px;
 }
@@ -43,8 +43,8 @@
 
 .auth-footer {
     text-align: center;
-    margin-top: 24px;
-    padding-top: 24px;
+    margin-top: 20px;
+    padding-top: 20px;
     border-top: 1px solid var(--border-color);
 }
 
@@ -60,4 +60,32 @@
 
 .auth-footer a:hover {
     text-decoration: underline;
+}
+
+/* ========== RESPONSIVE AUTH ========== */
+
+/* Mobile */
+@media (max-width: 576px) {
+    .auth-body {
+        padding: 12px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+    
+    .auth-card {
+        padding: 24px;
+    }
+    
+    .auth-header h1 {
+        font-size: 24px;
+    }
+    
+    .auth-header p {
+        font-size: 14px;
+    }
+    
+    .form-group input {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevenir zoom en iOS */
+    }
 }
