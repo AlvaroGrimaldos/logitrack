@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     loadUserInfo();
     loadBodegas();
-    loadUsuarios();
+    // Antes cargábamos una lista de usuarios; ahora se ingresará el ID manualmente
 });
 
 function loadUserInfo() {
@@ -43,23 +43,9 @@ async function loadBodegas() {
 }
 
 async function loadUsuarios() {
-    try {
-        // Nota: Necesitarías un endpoint para usuarios
-        // Por ahora simulamos datos
-        BODEGAS_STATE.usuarios = [
-            { id: 1, nombre: 'Admin Principal' },
-            { id: 2, nombre: 'Empleado Ejemplo' }
-        ];
-        
-        const select = document.getElementById('encargadoId');
-        select.innerHTML = '<option value="">Seleccionar encargado...</option>' +
-            BODEGAS_STATE.usuarios.map(user => 
-                `<option value="${user.id}">${user.nombre}</option>`
-            ).join('');
-            
-    } catch (error) {
-        console.error('Error cargando usuarios:', error);
-    }
+    // Mantener la función para compatibilidad futura. Actualmente no
+    // poblamos un select; el formulario pedirá ingresar el ID del encargado.
+    BODEGAS_STATE.usuarios = [];
 }
 
 function renderBodegas(bodegas = BODEGAS_STATE.bodegas) {
@@ -126,6 +112,8 @@ function showModal(mode, bodega = null) {
         title.textContent = 'Nueva Bodega';
         document.getElementById('bodegaForm').reset();
         document.getElementById('activo').checked = true;
+        const encargadoNameEl = document.getElementById('encargadoName');
+        if (encargadoNameEl) encargadoNameEl.textContent = '';
     } else {
         title.textContent = 'Editar Bodega';
         fillFormWithBodegaData(bodega);
@@ -144,6 +132,10 @@ function fillFormWithBodegaData(bodega) {
     document.getElementById('ubicacion').value = bodega.ubicacion || '';
     document.getElementById('capacidad').value = bodega.capacidad || '';
     document.getElementById('encargadoId').value = bodega.encargado?.id || '';
+    const encargadoNameEl = document.getElementById('encargadoName');
+    if (encargadoNameEl) {
+        encargadoNameEl.textContent = bodega.encargado?.nombre ? `- ${bodega.encargado.nombre}` : '';
+    }
     document.getElementById('activo').checked = bodega.activo !== false;
 }
 

@@ -108,10 +108,11 @@
                     <input type="number" id="capacidad" name="capacidad" min="1">
                 </div>
                 <div class="form-group">
-                    <label for="encargadoId">Encargado *</label>
-                    <select id="encargadoId" name="encargadoId" required>
-                        <option value="">Seleccionar encargado...</option>
-                    </select>
+                    <label for="encargadoId">Encargado (ID) *</label>
+                    <div class="encargado-input-row">
+                        <input type="number" id="encargadoId" name="encargadoId" required placeholder="Ingrese ID de la persona">
+                        <span id="encargadoName" class="muted-text"></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>
