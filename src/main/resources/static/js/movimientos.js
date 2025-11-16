@@ -431,21 +431,41 @@ function getMovementIcon(tipo) {
 }
 
 // ========== CONSULTA DE STOCK ==========
+let STOCK_DATA = [];
 async function loadStock() {
     try {
         const bodegaId = document.getElementById('stockBodega').value;
         const container = document.getElementById('stockList');
+        const statsContainer = document.getElementById('stockStats');
+        
+        // ✅ Verificar que los elementos existen
+        if (!container) {
+            console.error('No se encontró el elemento stockList');
+            return;
+        }
         
         if (!bodegaId) {
-            container.innerHTML = '<div class="loading">Selecciona una bodega para ver el stock</div>';
+            container.innerHTML = '<div class="loading">⚠️ Selecciona una bodega para ver el stock</div>';
+            // ✅ Solo ocultar si existe
+            if (statsContainer) {
+                statsContainer.style.display = 'none';
+            }
+            // Deshabilitar filtros secundarios
+            const searchInput = document.getElementById('searchStockProducto');
+            const filterSelect = document.getElementById('filterStockBajo');
+            if (searchInput) searchInput.disabled = true;
+            if (filterSelect) filterSelect.disabled = true;
             return;
         }
         
         container.innerHTML = '<div class="loading">Cargando stock...</div>';
+        // ✅ Solo ocultar si existe
+        if (statsContainer) {
+            statsContainer.style.display = 'none';
+        }
         
-        // Nota: Necesitarás un endpoint específico para stock por bodega
-        // Por ahora simulamos con datos de inventario
-        const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.INVENTARIOS), {
+        // Hacer petición al backend
+        const response = await fetch(buildUrl(`${API_CONFIG.ENDPOINTS.INVENTARIOS}/bodega/${bodegaId}`), {
             headers: {
                 'Authorization': `Bearer ${Storage.getToken()}`
             }
@@ -453,56 +473,206 @@ async function loadStock() {
         
         if (response.ok) {
             const inventarios = await response.json();
-            const stockBodega = inventarios.filter(inv => inv.bodegaId == bodegaId);
-            renderStock(stockBodega);
+            
+            // Si no hay inventarios, intentar con todos y filtrar
+            if (!inventarios || inventarios.length === 0) {
+                const allResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.INVENTARIOS), {
+                    headers: {
+                        'Authorization': `Bearer ${Storage.getToken()}`
+                    }
+                });
+                
+                if (allResponse.ok) {
+                    const allInventarios = await allResponse.json();
+                    STOCK_DATA = allInventarios.filter(inv => inv.bodegaId == bodegaId);
+                } else {
+                    STOCK_DATA = [];
+                }
+            } else {
+                STOCK_DATA = inventarios;
+            }
+            
+            // Cargar información de productos si es necesario
+            await enrichStockWithProductInfo();
+            
+            // Habilitar filtros secundarios
+            const searchInput = document.getElementById('searchStockProducto');
+            const filterSelect = document.getElementById('filterStockBajo');
+            if (searchInput) searchInput.disabled = false;
+            if (filterSelect) filterSelect.disabled = false;
+            
+            // Renderizar stock
+            renderStock(STOCK_DATA);
+            
+            // Mostrar estadísticas
+            updateStockStats(STOCK_DATA);
+            // ✅ Solo mostrar si existe
+            if (statsContainer) {
+                statsContainer.style.display = 'grid';
+            }
+            
         } else {
-            // Simulación de datos de stock
-            renderSimulatedStock();
+            throw new Error('Error al cargar stock');
         }
         
     } catch (error) {
         console.error('Error cargando stock:', error);
-        renderSimulatedStock();
+        const container = document.getElementById('stockList');
+        if (container) {
+            container.innerHTML = '<div class="loading">❌ Error al cargar el stock. Intenta nuevamente.</div>';
+        }
     }
 }
 
+// Enriquecer datos de stock con información de productos
+async function enrichStockWithProductInfo() {
+    // Si ya tenemos productos cargados, úsalos
+    if (MOVIMIENTOS_STATE.productos && MOVIMIENTOS_STATE.productos.length > 0) {
+        STOCK_DATA = STOCK_DATA.map(inv => {
+            const producto = MOVIMIENTOS_STATE.productos.find(p => p.id == inv.productoId);
+            return {
+                ...inv,
+                producto: producto || { id: inv.productoId, nombre: `Producto ${inv.productoId}`, precio: 0, categoria: 'N/A' }
+            };
+        });
+    }
+}
+
+// Renderizar lista de stock
 function renderStock(stockData) {
     const container = document.getElementById('stockList');
     
     if (!stockData || stockData.length === 0) {
-        container.innerHTML = '<div class="loading">No hay stock disponible en esta bodega</div>';
+        container.innerHTML = '<div class="loading">📦 No hay productos en esta bodega</div>';
         return;
     }
     
-    container.innerHTML = stockData.map(item => `
-        <div class="stock-item">
-            <div class="stock-icon">📦</div>
-            <div class="stock-info">
-                <h4>${item.producto?.nombre || `Producto ${item.productoId}`}</h4>
-                <p><strong>Categoría:</strong> ${item.producto?.categoria || 'N/A'}</p>
-                <p><strong>Precio referencia:</strong> $${item.producto?.precio || '0.00'}</p>
+    container.innerHTML = stockData.map(item => {
+        const producto = item.producto || { nombre: `Producto ${item.productoId}`, precio: 0, categoria: 'N/A' };
+        const stockLevel = getStockLevel(item.stockActual);
+        
+        return `
+            <div class="stock-item">
+                <div class="stock-icon">📦</div>
+                <div class="stock-info">
+                    <h4>${producto.nombre}</h4>
+                    <p><strong>Categoría:</strong> ${producto.categoria}</p>
+                    <p><strong>Precio referencia:</strong> $${Number(producto.precio).toFixed(2)}</p>
+                    <p><strong>Valor en stock:</strong> $${(item.stockActual * Number(producto.precio)).toFixed(2)}</p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="stock-badge" style="font-size: 18px; display: block; margin-bottom: 8px;">
+                        ${item.stockActual} unidades
+                    </span>
+                    <span class="stock-level-badge stock-level-${stockLevel}">
+                        ${stockLevel === 'bajo' ? '⚠️ Bajo' : stockLevel === 'medio' ? '📊 Medio' : '✅ Alto'}
+                    </span>
+                </div>
             </div>
-            <span class="stock-badge">
-                Stock: ${item.stockActual || 0}
-            </span>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
-function renderSimulatedStock() {
-    const container = document.getElementById('stockList');
-    const bodegaId = document.getElementById('stockBodega').value;
-    const bodega = MOVIMIENTOS_STATE.bodegas.find(b => b.id == bodegaId);
+// Determinar nivel de stock
+function getStockLevel(cantidad) {
+    if (cantidad < 10) return 'bajo';
+    if (cantidad <= 50) return 'medio';
+    return 'alto';
+}
+
+// Actualizar estadísticas de stock
+function updateStockStats(stockData) {
+    if (!stockData || stockData.length === 0) {
+        return;
+    }
     
-    if (!bodega) return;
+    const totalProductos = stockData.length;
+    const totalUnidades = stockData.reduce((sum, item) => sum + item.stockActual, 0);
+    const stockBajo = stockData.filter(item => item.stockActual < 10).length;
     
-    // Datos simulados - en producción vendrían del backend
-    const simulatedStock = MOVIMIENTOS_STATE.productos.map((producto, index) => ({
-        producto: producto,
-        stockActual: Math.floor(Math.random() * 100) + 10 // Stock aleatorio
-    }));
+    // Calcular valor total
+    let valorTotal = 0;
+    stockData.forEach(item => {
+        const precio = item.producto?.precio || 0;
+        valorTotal += item.stockActual * Number(precio);
+    });
     
-    renderStock(simulatedStock);
+    document.getElementById('totalProductosStock').textContent = totalProductos;
+    document.getElementById('totalUnidadesStock').textContent = totalUnidades;
+    document.getElementById('stockBajoCount').textContent = stockBajo;
+    document.getElementById('valorTotalStock').textContent = `$${valorTotal.toFixed(2)}`;
+}
+
+// Filtrar lista de stock
+function filterStockList() {
+    const searchText = document.getElementById('searchStockProducto').value.toLowerCase();
+    const nivelStock = document.getElementById('filterStockBajo').value;
+    
+    let filtered = [...STOCK_DATA];
+    
+    // Filtrar por búsqueda de texto
+    if (searchText) {
+        filtered = filtered.filter(item => {
+            const producto = item.producto || {};
+            return (producto.nombre || '').toLowerCase().includes(searchText) ||
+                   (producto.categoria || '').toLowerCase().includes(searchText);
+        });
+    }
+    
+    // Filtrar por nivel de stock
+    if (nivelStock) {
+        filtered = filtered.filter(item => {
+            const nivel = getStockLevel(item.stockActual);
+            return nivel === nivelStock;
+        });
+    }
+    
+    renderStock(filtered);
+    updateStockStats(filtered);
+}
+
+// Actualizar contador de filtros de stock
+function updateStockFilterCount() {
+    let count = 0;
+    if (document.getElementById('stockBodega').value) count++;
+    
+    const badge = document.getElementById('stockFilterCount');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// Limpiar filtros de stock
+function clearStockFilters() {
+    // ✅ Validar que cada elemento existe antes de usarlo
+    const bodegaSelect = document.getElementById('stockBodega');
+    const searchInput = document.getElementById('searchStockProducto');
+    const filterSelect = document.getElementById('filterStockBajo');
+    const stockList = document.getElementById('stockList');
+    const statsContainer = document.getElementById('stockStats');
+    
+    if (bodegaSelect) bodegaSelect.value = '';
+    if (searchInput) {
+        searchInput.value = '';
+        searchInput.disabled = true;
+    }
+    if (filterSelect) {
+        filterSelect.value = '';
+        filterSelect.disabled = true;
+    }
+    
+    updateStockFilterCount();
+    
+    if (stockList) {
+        stockList.innerHTML = '<div class="loading">Selecciona una bodega y haz clic en "Consultar Stock"</div>';
+    }
+    
+    if (statsContainer) {
+        statsContainer.style.display = 'none';
+    }
 }
 
 // ========== UTILIDADES ==========
@@ -541,4 +711,28 @@ function showNotification(message, type = 'info') {
 // Navegación
 function navigateTo(url) {
     window.location.href = url;
+}
+
+// Contar filtros activos en movimientos
+function updateFilterCount() {
+    let count = 0;
+    if (document.getElementById('filterTipo').value) count++;
+    if (document.getElementById('filterFechaInicio').value) count++;
+    if (document.getElementById('filterFechaFin').value) count++;
+    
+    const badge = document.getElementById('activeFiltersCount');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function clearMovimientosFilters() {
+    document.getElementById('filterTipo').value = '';
+    document.getElementById('filterFechaInicio').value = '';
+    document.getElementById('filterFechaFin').value = '';
+    updateFilterCount();
+    loadMovimientos();
 }

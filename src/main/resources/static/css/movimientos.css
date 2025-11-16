@@ -322,3 +322,67 @@
         padding: 20px;
     }
 }
+
+/* Estadísticas de Stock */
+.stock-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.stock-stats .stat-card {
+    background: var(--bg-white);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stock-stats .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.stock-stats .stat-label {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Badge de nivel de stock */
+.stock-level-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stock-level-bajo {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.stock-level-medio {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.stock-level-alto {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* Responsive para stats */
+@media (max-width: 768px) {
+    .stock-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

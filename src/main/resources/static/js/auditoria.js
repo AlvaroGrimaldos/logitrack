@@ -129,11 +129,28 @@ function updateStats() {
     document.getElementById('operacionesActualizacion').textContent = actualizaciones;
 }
 
-function clearFilters() {
+function updateAuditoriaFilterCount() {
+    let count = 0;
+    if (document.getElementById('filterOperacion').value) count++;
+    if (document.getElementById('filterEntidad').value) count++;
+    if (document.getElementById('filterFechaInicio').value) count++;
+    if (document.getElementById('filterFechaFin').value) count++;
+    
+    const badge = document.getElementById('auditoriaFilterCount');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function clearAuditoriaFilters() {
     document.getElementById('filterOperacion').value = '';
     document.getElementById('filterEntidad').value = '';
     document.getElementById('filterFechaInicio').value = '';
     document.getElementById('filterFechaFin').value = '';
+    updateAuditoriaFilterCount();
     loadAuditoria();
 }
 

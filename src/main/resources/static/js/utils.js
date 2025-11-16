@@ -364,3 +364,19 @@ window.StringUtils = StringUtils;
 document.addEventListener('DOMContentLoaded', function() {
     NotificationManager.init();
 });
+
+// ========== DEBOUNCE PARA BÚSQUEDAS ==========
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Exportar para uso global
+window.debounce = debounce;

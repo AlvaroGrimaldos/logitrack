@@ -3,6 +3,8 @@ let PRODUCTOS_STATE = {
     editingProducto: null
 };
 
+const debouncedFilterProductos = debounce(filterProductos, 300);
+
 document.addEventListener('DOMContentLoaded', function() {
     if (!requireAuth()) return;
     
@@ -264,3 +266,28 @@ window.onclick = function(event) {
         closeProductModal();
     }
 };
+
+// Debounce para búsqueda de productos
+
+function updateProductosFilterCount() {
+    let count = 0;
+    if (document.getElementById('searchProducto').value) count++;
+    if (document.getElementById('filterCategoria').value) count++;
+    if (document.getElementById('filterActivo').value) count++;
+    
+    const badge = document.getElementById('productosFilterCount');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function clearProductosFilters() {
+    document.getElementById('searchProducto').value = '';
+    document.getElementById('filterCategoria').value = '';
+    document.getElementById('filterActivo').value = '';
+    updateProductosFilterCount();
+    renderProductos(PRODUCTOS_STATE.productos);
+}

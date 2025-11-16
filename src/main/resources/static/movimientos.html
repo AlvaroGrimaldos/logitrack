@@ -121,25 +121,64 @@
 
         <!-- Tab: Consultar Movimientos -->
         <div id="consultar" class="tab-content">
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="filterTipo">Tipo</label>
-                    <select id="filterTipo">
-                        <option value="">Todos</option>
-                        <option value="ENTRADA">Entrada</option>
-                        <option value="SALIDA">Salida</option>
-                        <option value="TRANSFERENCIA">Transferencia</option>
-                    </select>
+            <div class="filters-container">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        Filtros de Búsqueda
+                    </div>
+                    <div class="filters-actions">
+                        <span class="filter-badge" id="activeFiltersCount" style="display: none;">0</span>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label for="filterFechaInicio">Fecha Inicio</label>
-                    <input type="date" id="filterFechaInicio">
+
+                <div class="filters-grid">
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">📋</span>
+                            Tipo de Movimiento
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📦</span>
+                            <select id="filterTipo" class="filter-select" onchange="updateFilterCount()">
+                                <option value="">Todos los tipos</option>
+                                <option value="ENTRADA">Entrada</option>
+                                <option value="SALIDA">Salida</option>
+                                <option value="TRANSFERENCIA">Transferencia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">📅</span>
+                            Fecha Inicio
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">🗓️</span>
+                            <input type="date" id="filterFechaInicio" class="filter-input" onchange="updateFilterCount()">
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">📅</span>
+                            Fecha Fin
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">🗓️</span>
+                            <input type="date" id="filterFechaFin" class="filter-input" onchange="updateFilterCount()">
+                        </div>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label for="filterFechaFin">Fecha Fin</label>
-                    <input type="date" id="filterFechaFin">
+
+                <div class="filters-buttons">
+                    <button class="btn-filter btn-filter-clear" onclick="clearMovimientosFilters()">
+                        ✖️ Limpiar Filtros
+                    </button>
+                    <button class="btn-filter btn-filter-primary" onclick="loadMovimientos()">
+                        🔍 Buscar
+                    </button>
                 </div>
-                <button class="btn btn-primary" onclick="loadMovimientos()">Buscar</button>
             </div>
 
             <div id="movimientosList" class="movements-list">
@@ -149,14 +188,88 @@
 
         <!-- Tab: Ver Stock -->
         <div id="stock" class="tab-content">
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="stockBodega">Bodega</label>
-                    <select id="stockBodega">
-                        <option value="">Todas las bodegas</option>
-                    </select>
+            <div class="filters-container">
+                <div class="filters-header">
+                    <div class="filters-title">
+                        Consultar Stock por Bodega
+                    </div>
+                    <div class="filters-actions">
+                        <span class="filter-badge" id="stockFilterCount" style="display: none;">1</span>
+                    </div>
                 </div>
-                <button class="btn btn-primary" onclick="loadStock()">Consultar</button>
+
+                <div class="filters-grid">
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">🏪</span>
+                            Seleccionar Bodega
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📍</span>
+                            <select id="stockBodega" class="filter-select" onchange="updateStockFilterCount()">
+                                <option value="">Selecciona una bodega...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">🔍</span>
+                            Buscar Producto
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📦</span>
+                            <input type="text" id="searchStockProducto" class="filter-input" 
+                                placeholder="Nombre del producto..." 
+                                onkeyup="filterStockList()"
+                                disabled>
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label class="filter-label">
+                            <span class="filter-label-icon">⚠️</span>
+                            Stock Bajo
+                        </label>
+                        <div class="filter-input-wrapper">
+                            <span class="filter-input-icon">📊</span>
+                            <select id="filterStockBajo" class="filter-select" onchange="filterStockList()" disabled>
+                                <option value="">Todos los niveles</option>
+                                <option value="bajo">Stock bajo (< 10)</option>
+                                <option value="medio">Stock medio (10-50)</option>
+                                <option value="alto">Stock alto (> 50)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-buttons">
+                    <button class="btn-filter btn-filter-clear" onclick="clearStockFilters()">
+                        ✖️ Limpiar
+                    </button>
+                    <button class="btn-filter btn-filter-primary" onclick="loadStock()">
+                        🔍 Consultar Stock
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stock-stats" id="stockStats" style="display: none;">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalProductosStock">0</div>
+                    <div class="stat-label">Productos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalUnidadesStock">0</div>
+                    <div class="stat-label">Unidades Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stockBajoCount">0</div>
+                    <div class="stat-label">Stock Bajo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="valorTotalStock">$0</div>
+                    <div class="stat-label">Valor Estimado</div>
+                </div>
             </div>
 
             <div id="stockList" class="stock-list">

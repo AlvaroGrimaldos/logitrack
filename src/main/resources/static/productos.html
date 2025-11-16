@@ -35,28 +35,69 @@
             <button class="btn btn-primary" onclick="showProductModal('create')">+ Nuevo Producto</button>
         </div>
 
-        <div class="filters">
-            <div class="filter-group">
-                <label for="searchProducto">Buscar</label>
-                <input type="text" id="searchProducto" placeholder="Nombre o categoría..." onkeyup="filterProductos()">
+        <div class="filters-container">
+            <div class="filters-header">
+                <div class="filters-title">
+                    Filtros de Productos
+                </div>
+                <div class="filters-actions">
+                    <span class="filter-badge" id="productosFilterCount" style="display: none;">0</span>
+                </div>
             </div>
-            <div class="filter-group">
-                <label for="filterCategoria">Categoría</label>
-                <select id="filterCategoria" onchange="filterProductos()">
-                    <option value="">Todas</option>
-                    <option value="TECNOLOGIA">Tecnología</option>
-                    <option value="MUEBLES">Muebles</option>
-                    <option value="OFICINA">Oficina</option>
-                    <option value="HERRAMIENTAS">Herramientas</option>
-                </select>
+
+            <div class="filters-grid">
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">🔍</span>
+                        Buscar
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📦</span>
+                        <input type="text" id="searchProducto" class="filter-input" 
+                            placeholder="Nombre o categoría..." 
+                            onkeyup="debouncedFilterProductos()">
+                    </div>
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">🏷️</span>
+                        Categoría
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📂</span>
+                        <select id="filterCategoria" class="filter-select" onchange="filterProductos()">
+                            <option value="">Todas las categorías</option>
+                            <option value="TECNOLOGIA">Tecnología</option>
+                            <option value="MUEBLES">Muebles</option>
+                            <option value="OFICINA">Oficina</option>
+                            <option value="HERRAMIENTAS">Herramientas</option>
+                            <option value="ELECTRODOMESTICOS">Electrodomésticos</option>
+                            <option value="MATERIALES">Materiales</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-field">
+                    <label class="filter-label">
+                        <span class="filter-label-icon">⚡</span>
+                        Estado
+                    </label>
+                    <div class="filter-input-wrapper">
+                        <span class="filter-input-icon">📊</span>
+                        <select id="filterActivo" class="filter-select" onchange="filterProductos()">
+                            <option value="">Todos los estados</option>
+                            <option value="true">Activos</option>
+                            <option value="false">Inactivos</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="filter-group">
-                <label for="filterActivo">Estado</label>
-                <select id="filterActivo" onchange="filterProductos()">
-                    <option value="">Todos</option>
-                    <option value="true">Activos</option>
-                    <option value="false">Inactivos</option>
-                </select>
+
+            <div class="filters-buttons">
+                <button class="btn-filter btn-filter-clear" onclick="clearProductosFilters()">
+                    ✖️ Limpiar Filtros
+                </button>
             </div>
         </div>
 

@@ -4,6 +4,8 @@ let BODEGAS_STATE = {
     editingBodega: null
 };
 
+const debouncedFilterBodegas = debounce(filterBodegas, 300);
+
 document.addEventListener('DOMContentLoaded', function() {
     if (!requireAuth()) return;
     
@@ -269,3 +271,26 @@ window.onclick = function(event) {
         closeModal();
     }
 };
+
+// Debounce para búsqueda de bodegas
+
+function updateBodegasFilterCount() {
+    let count = 0;
+    if (document.getElementById('searchBodega').value) count++;
+    if (document.getElementById('filterActivo').value) count++;
+    
+    const badge = document.getElementById('bodegasFilterCount');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function clearBodegasFilters() {
+    document.getElementById('searchBodega').value = '';
+    document.getElementById('filterActivo').value = '';
+    updateBodegasFilterCount();
+    renderBodegas(BODEGAS_STATE.bodegas);
+}
