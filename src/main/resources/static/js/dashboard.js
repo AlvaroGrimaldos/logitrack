@@ -19,7 +19,7 @@ async function loadDashboardData() {
         // Cargar productos
         const productosResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.PRODUCTOS), {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         
@@ -31,7 +31,7 @@ async function loadDashboardData() {
         // Cargar bodegas
         const bodegasResponse = await fetch(buildUrl(API_CONFIG.ENDPOINTS.BODEGAS), {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         
@@ -41,8 +41,8 @@ async function loadDashboardData() {
         }
 
         // Cargar movimientos de hoy (simulado por ahora)
-        document.getElementById('movimientosHoy').textContent = '5';
-        document.getElementById('usuariosActivos').textContent = '2';
+        document.getElementById('movimientosHoy');
+        document.getElementById('usuariosActivos');
 
     } catch (error) {
         console.error('Error cargando datos del dashboard:', error);
@@ -53,18 +53,30 @@ async function loadRecentMovimientos() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.MOVIMIENTOS), {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
-        
+
         const container = document.getElementById('recentMovimientos');
-        
+
+        // Leer siempre el body como texto (permite inspeccionarlo y evitar leer el stream dos veces)
+        const bodyText = await response.text();
+
         if (!response.ok) {
+            console.error('Respuesta no OK de /api/movimientos:', bodyText);
             container.innerHTML = '<div class="loading">No hay movimientos recientes</div>';
             return;
         }
-        
-        const movimientos = await response.json();
+
+        let movimientos;
+        try {
+            movimientos = JSON.parse(bodyText || '[]');
+        } catch (parseError) {
+            console.error('Respuesta no es JSON válido (body):', bodyText);
+            console.error('Error al parsear JSON:', parseError);
+            container.innerHTML = '<div class="loading">Error al procesar datos de movimientos</div>';
+            return;
+        }
         
         if (movimientos.length === 0) {
             container.innerHTML = '<div class="loading">No hay movimientos recientes</div>';

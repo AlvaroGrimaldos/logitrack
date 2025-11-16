@@ -1,5 +1,6 @@
 package com.logitrack.logitrack.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.logitrack.logitrack.enums.Rol;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 200)
     private String email;
     
+    @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 300)
     private String passwordHash;
     

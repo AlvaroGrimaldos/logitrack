@@ -1,5 +1,6 @@
 package com.logitrack.logitrack.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +12,7 @@ public class MovimientoDetalle {
     
     @ManyToOne
     @JoinColumn(name = "movimiento_id", nullable = false)
+    @JsonBackReference
     private MovimientoInventario movimiento;
     
     @ManyToOne

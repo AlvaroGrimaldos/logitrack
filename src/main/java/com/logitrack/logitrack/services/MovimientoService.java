@@ -1,5 +1,6 @@
 package com.logitrack.logitrack.services;
 
+import com.logitrack.logitrack.dto.InventarioDTO;
 import com.logitrack.logitrack.entities.*;
 import com.logitrack.logitrack.enums.TipoMovimiento;
 import com.logitrack.logitrack.repositories.InventarioRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MovimientoService {
@@ -34,6 +36,12 @@ public class MovimientoService {
         this.authService = authService;
         this.auditoriaService = auditoriaService;
     }
+
+    @Transactional
+    public List<MovimientoInventario> findAll() {
+        return movimientoRepository.findAll();
+    }
+
 
     // ✅ LÓGICA DE ENTRADA DE INVENTARIO
     @Transactional

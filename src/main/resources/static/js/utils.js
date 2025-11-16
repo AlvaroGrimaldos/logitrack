@@ -270,7 +270,7 @@ const ApiUtils = {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`,
+                'Bearer': `${Storage.getToken()}`,
                 'Content-Type': 'application/json',
                 ...options.headers
             },
@@ -283,7 +283,7 @@ const ApiUtils = {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`,
+                'Bearer': `${Storage.getToken()}`,
                 'Content-Type': 'application/json',
                 ...options.headers
             },
@@ -297,7 +297,7 @@ const ApiUtils = {
         const response = await fetch(url, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`,
+                'Bearer': `${Storage.getToken()}`,
                 'Content-Type': 'application/json',
                 ...options.headers
             },
@@ -311,7 +311,7 @@ const ApiUtils = {
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`,
+                'Bearer': `${Storage.getToken()}`,
                 ...options.headers
             },
             ...options

@@ -41,7 +41,7 @@ async function loadAuditoria() {
         
         const response = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         

@@ -74,12 +74,22 @@ const Storage = {
 
 // Función para construir URLs de API
 function buildUrl(endpoint, params = {}) {
+    // Permitir pasar un objeto con propiedades (p.ej. { BASE: '/movimientos', ... })
+    if (typeof endpoint === 'object' && endpoint !== null) {
+        if (endpoint.BASE) {
+            endpoint = endpoint.BASE;
+        } else {
+            // Si no tiene BASE, intentar convertir a string seguro
+            endpoint = String(endpoint);
+        }
+    }
+
     let url = API_CONFIG.BASE_URL + endpoint;
-    
+
     // Reemplazar parámetros en la URL (ej: /api/movimientos/entrada/{bodegaId})
     Object.keys(params).forEach(key => {
         url = url.replace(`{${key}}`, params[key]);
     });
-    
+
     return url;
 }

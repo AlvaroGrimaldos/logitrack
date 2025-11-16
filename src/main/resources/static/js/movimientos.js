@@ -163,7 +163,7 @@ async function loadBodegas() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.BODEGAS), {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         
@@ -194,7 +194,7 @@ async function loadProductos() {
     try {
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.PRODUCTOS), {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         
@@ -224,7 +224,7 @@ document.getElementById('movementForm').addEventListener('submit', async functio
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             },
             body: JSON.stringify(movimientoData)
         });
@@ -331,7 +331,7 @@ async function loadMovimientos() {
         
         const response = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         
@@ -402,7 +402,7 @@ async function loadStock() {
         // Por ahora simulamos con datos de inventario
         const response = await fetch(buildUrl(API_CONFIG.ENDPOINTS.INVENTARIOS), {
             headers: {
-                'Authorization': `Bearer ${Storage.getToken()}`
+                'Bearer': `${Storage.getToken()}`
             }
         });
         

@@ -1,5 +1,6 @@
 package com.logitrack.logitrack.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.logitrack.logitrack.enums.TipoMovimiento;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class MovimientoInventario {
     private LocalDateTime createdAt = LocalDateTime.now();
     
     @OneToMany(mappedBy = "movimiento", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<MovimientoDetalle> detalles = new ArrayList<>();
     
     // Constructores

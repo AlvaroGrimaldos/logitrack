@@ -22,6 +22,7 @@ public class MovimientoController {
         this.movimientoService = movimientoService;
     }
 
+
     // ✅ DTO para registrar movimientos
     public static class MovimientoRequest {
         private List<DetalleRequest> detalles;
@@ -90,7 +91,13 @@ public class MovimientoController {
 
     // ✅ ENDPOINT: Obtener todos los movimientos
     @GetMapping
-    public ResponseEntity<List<MovimientoInventario>> obtenerTodosMovimientos() {
+    public ResponseEntity<List<MovimientoInventario>> findAll() {
+        return ResponseEntity.ok(movimientoService.findAll());
+    }
+
+    // ✅ ENDPOINT: Obtener movimientos recientes (último mes)
+    @GetMapping("/recientes")
+    public ResponseEntity<List<MovimientoInventario>> obtenerMovimientosRecientes() {
         try {
             List<MovimientoInventario> movimientos = movimientoService.obtenerMovimientosPorFecha(
                 LocalDateTime.now().minusMonths(1), // Último mes por defecto
