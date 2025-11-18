@@ -1,6 +1,6 @@
 // Configuración global de la aplicación
 const API_CONFIG = {
-    BASE_URL: 'http://localhost:8080/api',
+    BASE_URL: 'http://localhost:8080/logitrack/api',
     ENDPOINTS: {
         AUTH: {
             LOGIN: '/auth/login',
