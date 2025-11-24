@@ -16,6 +16,15 @@
 
 ---
 
+# Examen:
+## src/main/java/com/logitrack/logitrack/controllers/ReporteController.java
+## src/main/java/com/logitrack/logitrack/services/ReporteService.java
+
+### Pruebas endpoints examen:
+![Prueba 1](<Captura desde 2025-11-24 17-48-41.png>)
+![Prueba 2](<Captura desde 2025-11-24 17-48-23.png>)
+
+
 ## 📋 Tabla de Contenidos
 
 - [Descripción](#-descripción)
